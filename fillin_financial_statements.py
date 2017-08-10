@@ -25,7 +25,7 @@ def choose_fill_func(release_date, expiration_date):
     
     def fill_func_3(templates, interest, principle):
         wb = load_workbook(templates[2])
-        wb["statements_of_cash_flows"]['B18'].value = principle
+        wb["statement_of_cash_flows"]['B18'].value = principle
         wb["income_statement"]['B32'].value = interest[0]
         wb["income_statement"]['B5'].value = interest[2]
         wb["balance_sheet"]['C5'].value = interest[5]
