@@ -7,7 +7,6 @@ def choose_fill_func(release_date, expiration_date):
     def fill_func_1(templates, interest, principle):
         wb = load_workbook(templates[0])
         wb["balance_sheet"]['C9'].value = principle
-        wb["balance_sheet"]['B32'].value = interest[0]
         wb["balance_sheet"]['C13'].value = interest[1]
         wb["income_statement"]['C5'].value = interest[3]
         wb["income_statement"]['B5'].value = interest[4]
@@ -41,7 +40,6 @@ def choose_fill_func(release_date, expiration_date):
         wb = load_workbook(templates[4])
         wb["balance_sheet"]['B9'].value = principle
         wb["balance_sheet"]['B5'].value = interest[4]
-        wb["balance_sheet"]['B32'].value = interest[0]
         wb["balance_sheet"]['B13'].value = interest[2]
         return wb
     
@@ -80,9 +78,18 @@ source_ws = source_wb["sheet1"]
 rowLen = source_ws.max_row
 colLen = source_ws.max_column
 
-end_of_last_year = date(2016, 12, 31)
-end_of_last_month = date(2017, 4, 30)
-end_of_this_month = date(2017, 5, 31)
+print("end_of_last_year?")
+end_of_last_year_string = input()
+end_of_last_year = datetime.strptime(end_of_last_year_string, '%Y-%m-%d').date()
+
+print("end_of_last_month?")
+end_of_last_month_string = input()
+end_of_last_month = datetime.strptime(end_of_last_month_string, '%Y-%m-%d').date()
+
+print("end_of_this_month?")
+end_of_this_month_string = input()
+end_of_this_month = datetime.strptime(end_of_this_month_string, '%Y-%m-%d').date()
+
 
 os.makedirs('./results')
 result_dir = './results'
@@ -102,17 +109,13 @@ for row in source_ws.iter_rows(min_row=2, max_row=227, max_col=colLen):
                 (expiration_date - release_date).days*principle*rate_of_return/365
                 ]
         
-    template_path = ['./template1.xlsx','./template2.xlsx','./template3.xlsx','./template4.xlsx','./template5.xlsx']
+    template_path = ['./templates/template1.xlsx','./templates/template2.xlsx','./templates/template3.xlsx','./templates/template4.xlsx','./templates/template5.xlsx']
                 
     target_path = result_dir + '/' + str(row[0].value) + '.xlsx'
     fill_func = choose_fill_func(release_date, expiration_date)
     result_spreadsheet = fill_func(template_path, interest, principle)
     if result_spreadsheet is not None:
         result_spreadsheet.save(target_path)
-
-
-
-
 
 
 
